@@ -1,0 +1,18 @@
+# Compiled JavaScript files
+lib/**/*.js
+lib/**/*.js.map
+
+# TypeScript v1 declaration files
+typings/
+
+# Node.js dependency directory
+node_modules/
+*.local
+apps/frontend/dist
+apps/frontend/node_modules
+apps/backend/dist
+apps/backend/node_modules
+node_modules
+dist
+.angular
+.vscode
