@@ -1,6 +1,6 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://users-todo-6a278.firebaseapp.com/api',
+    apiUrl: 'https://api-frvsflo6pa-uc.a.run.app',
     // apiUrl: 'http://localhost:5001/your-project/us-central1/nestApi/api',
     firebase: {
       apiKey: 'your-api-key',
