@@ -13,7 +13,7 @@ export class AppComponent {
   usersService = inject(UsersService);
 
   constructor(){
-    console.log('AppComponent init ');
+    console.log('AppComponent init!');
     effect(()=>{
       this.usersService.user.value();
     })
