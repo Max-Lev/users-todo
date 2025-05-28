@@ -10,12 +10,12 @@ import { UsersService } from './core/providers/users.service';
 })
 export class AppComponent {
   title = 'frontend';
-  usersService = inject(UsersService);
+  // usersService = inject(UsersService);
 
   constructor(){
-    console.log('AppComponent init!');
-    effect(()=>{
-      this.usersService.user.value();
-    })
+    // console.log('AppComponent init!');
+    // effect(()=>{
+    //   this.usersService.user.value();
+    // })
   }
 }

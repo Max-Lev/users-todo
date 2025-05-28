@@ -1,1 +1,25 @@
 /* You can add global styles to this file, and also import other style files */
+// @import '~@angular/material/prebuilt-themes/cyan-orange.css';
+@import '@angular/material/prebuilt-themes/cyan-orange.css';
+html, body { height: 100%;}
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; 
+    // letter-spacing: 1.5px;
+// background-color: #00dddd;
+background-color: #424242;
+}
+
+.container{
+    padding: 1rem;
+    border-radius: 5px;
+}
+
+.mat-mdc-table tbody .mat-mdc-row{
+    color:white;
+    color:grey;
+    
+}
+.mat-mdc-cell,.border-bottom-color {
+    // border-color: aqua !important;
+    border-color: white !important;
+    letter-spacing: 1.15px;
+}

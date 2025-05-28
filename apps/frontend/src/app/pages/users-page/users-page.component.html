@@ -1,0 +1,13 @@
+<!-- <p>users-page works!</p>
+@for (user of usersResponse()?.users; track $index) {
+    <ul>
+        <pre>{{user | json}}</pre>
+    </ul>
+} -->
+<section class="container">
+    @if (loaded()) {
+    <app-users-table [usersResponse]="usersResponse()"></app-users-table>
+    }@else {
+    loading component table...
+    }
+</section>
