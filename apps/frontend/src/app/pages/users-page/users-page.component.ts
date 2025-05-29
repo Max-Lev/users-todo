@@ -4,6 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { JsonPipe } from '@angular/common';
 import { UsersTableComponent } from '../../shared/components/users-table/users-table.component';
 import { UsersResponseDto } from '../../shared/models/users-response.model';
+import { PageEvent } from '@angular/material/paginator';
 @Component({
   selector: 'app-users-page',
   standalone: true,
@@ -25,11 +26,36 @@ export class UsersPageComponent {
     return response?.users && response.users.length > 0;
   });
 
+  totalItems = 0;
+  pageSize = 5;
+  currentPage = 0;
+  itemsLenght = 0;
+
   constructor() {
     effect(() => {
       console.log(this.usersResponse()?.users);
       // this.loaded = this.usersResponse()?.users.length ? true : false;
     })
+  }
+
+  pageEventHandler(event:PageEvent){
+    console.log(event);
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    
+    // this.itemsLenght = event.length;
+    const skip = this.currentPage * this.pageSize;
+    this.usersService.nextPageUsers(this.pageSize, skip )
+    .subscribe(
+      {
+        next: (res:any) =>{
+          console.log(res)
+          this.totalItems = res.total;
+        },
+        error(err) {
+          console.log(err)
+        },
+      });
   }
 
 }

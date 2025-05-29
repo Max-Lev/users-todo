@@ -1,25 +1,216 @@
 /* You can add global styles to this file, and also import other style files */
 // @import '~@angular/material/prebuilt-themes/cyan-orange.css';
-@import '@angular/material/prebuilt-themes/cyan-orange.css';
-html, body { height: 100%;}
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; 
-    // letter-spacing: 1.5px;
-// background-color: #00dddd;
-background-color: #424242;
+// @import '@angular/material/prebuilt-themes/cyan-orange.css';
+@import '@angular/material/prebuilt-themes/magenta-violet.css';
+
+html,
+body {
+    height: 100%;
 }
 
-.container{
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    // letter-spacing: 1.5px;
+    // background-color: #00dddd;
+    background-color: #424242;
+    // background-color: #004f4f;
+}
+
+.container {
     padding: 1rem;
     border-radius: 5px;
 }
 
-.mat-mdc-table tbody .mat-mdc-row{
-    color:white;
-    color:grey;
-    
+.mat-mdc-table tbody .mat-mdc-row {
+    color: white;
+    color: grey;
+
 }
-.mat-mdc-cell,.border-bottom-color {
+
+.mat-mdc-cell,
+.border-bottom-color {
     // border-color: aqua !important;
-    border-color: white !important;
+    // border-color: white !important;
     letter-spacing: 1.15px;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+// styles.scss
+@import '@angular/material/prebuilt-themes/magenta-violet.css';
+
+html,
+body {
+    height: 100%;
+    //   background-color: #424242; // Dark base remains
+    color: rgba(255, 255, 255, 0.87); // Better text contrast
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    line-height: 1.6; // Improved readability
+}
+
+// ========== BUSINESS ADMIN THEME ENHANCEMENTS ========== //
+// Container styling
+.container {
+    padding: 2rem;
+    border-radius: 8px;
+    //   background-color: rgba(33, 33, 33, 0.8); // Darker container background
+    //   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25); // Professional shadow
+    box-shadow: 0 4px 20px rgba(10, 10, 10, 0.25); // Professional shadow
+    margin: 1.5rem auto;
+    max-width: 1400px; // Constrain width for business apps
+}
+
+// Table enhancements for business data
+.mat-mdc-table {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    //   border-radius: 8px;
+    overflow: hidden;
+
+    .mat-mdc-header-row {
+        background-color: #2c387e; // Deeper header color
+        font-weight: 500;
+        letter-spacing: 0.5px;
+
+        .mat-mdc-header-cell {
+            color: white;
+            font-size: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        }
+    }
+
+    .mat-mdc-row {
+        transition: background-color 0.2s;
+
+        &:hover {
+            background-color: rgba(66, 66, 66, 0.7) !important;
+        }
+
+        &:nth-child(even) {
+            background-color: rgba(50, 50, 50, 0.5); // Zebra striping
+        }
+
+        .mat-mdc-cell {
+            color: rgba(255, 255, 255, 0.8);
+            border-bottom-color: rgba(255, 255, 255, 0.08);
+            padding: 16px;
+            font-size: 13.5px;
+        }
+    }
+}
+
+// Form field enhancements
+.mat-mdc-form-field {
+    width: 100%;
+    margin-bottom: 1.5rem;
+
+    .mat-mdc-text-field-wrapper {
+        background-color: rgba(255, 255, 255, 0.07);
+        border-radius: 4px;
+    }
+
+    .mat-mdc-input-element {
+        color: rgba(255, 255, 255, 0.87);
+        letter-spacing: 0.5px;
+    }
+
+    .mat-mdc-form-field-label {
+        color: rgba(255, 255, 255, 0.6);
+    }
+}
+
+// Button enhancements
+.mat-mdc-raised-button {
+    border-radius: 4px !important;
+    font-weight: 500;
+    letter-spacing: 0.75px;
+    min-width: 120px;
+
+    &[color="primary"] {
+        box-shadow: 0 2px 10px rgba(156, 39, 176, 0.4);
+    }
+}
+
+// Card styling for business dashboards
+.mat-mdc-card {
+    border-radius: 8px !important;
+    background-color: rgba(45, 45, 45, 0.8);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    margin-bottom: 2rem;
+
+    .mat-mdc-card-title {
+        font-weight: 500;
+        font-size: 1.1rem;
+        color: #e0e0e0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 12px;
+    }
+}
+
+// Dashboard grid layout
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+// Typography enhancements
+h1,
+h2,
+h3 {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    color: #e0e0e0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.5rem;
+}
+
+h1 {
+    font-size: 2.2rem;
+    margin-top: 0;
+}
+
+// Utility classes for business metrics
+.metric-card {
+    text-align: center;
+    padding: 1.5rem;
+
+    .metric-value {
+        font-size: 2.5rem;
+        font-weight: 300;
+        color: #bb86fc; // Material purple
+        margin: 1rem 0;
+    }
+
+    .metric-label {
+        color: rgba(255, 255, 255, 0.7);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.85rem;
+    }
+}
+
+// Responsive design adjustments
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+        margin: 0.5rem;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
 }

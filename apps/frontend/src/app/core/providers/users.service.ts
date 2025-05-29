@@ -1,7 +1,7 @@
 import { HttpClient, httpResource } from '@angular/common/http';
 import { effect, inject, Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
-import { debounceTime, delay, EMPTY, map, Observable, of, throttleTime } from 'rxjs';
+import { debounceTime, delay, EMPTY, map, Observable, of, switchMap, throttleTime } from 'rxjs';
 import { UsersResponseDto } from '../../shared/models/users-response.model';
 
 @Injectable({
@@ -15,6 +15,7 @@ export class UsersService {
     // effect(()=>{
     //   this.user;
     // })
+    this.getUserTasks$(3)
   }
 
   // user = httpResource(() => ({
@@ -30,6 +31,27 @@ export class UsersService {
   //   withCredentials: true,
   //   transferCache: true,
   // }));
+
+  getUserTasks$(id:number){
+    return this.http.get(`${environment.apiUrl}/todoes/${id}`)
+    .pipe(
+      switchMap((res: any) =>{
+        return of(res)
+      }),
+      map((res: any) =>{
+        console.log(res)
+        return res;
+      })
+    ).subscribe({
+      next: (res) => {
+        console.log(res)
+      },
+      error: (err) => {
+        console.log(err)
+      }
+    })
+  }
+
 
 
   getUsers$(): Observable<UsersResponseDto> {
@@ -49,11 +71,11 @@ export class UsersService {
           res.users = res.users.map((user) => {
             const genter = user.gender === 'male' ? ' - M' : ' - F';
             const maidenNameEmpty = user.firstName + ' ' + user.lastName + ' ' + genter;
-            const maidenNameExist = user.maidenName ? (user.firstName + ' ' + ' ( ' +user.maidenName+ ' ) ' + ' ' + user.lastName + ' ' + genter) : maidenNameEmpty;
+            const maidenNameExist = user.maidenName ? (user.firstName + ' ' + 
+              ' ( ' +user.maidenName+ ' ) ' + ' ' + user.lastName + ' ' + genter) : maidenNameEmpty;
             const name = user.maidenName ? maidenNameExist : maidenNameEmpty;
             return {
               ...user,
-              // name: user.firstName + ' ' + ' ('+user.maidenName+') ' + ' ' + user.lastName + ' ' + genter
               name: name
             }
           });
@@ -61,6 +83,13 @@ export class UsersService {
         }),
         // delay(4000) 
       );
+  }
+
+  nextPageUsers(limit: number, skip: number){
+    // 'https://dummyjson.com/users?limit=5&skip=10&select=firstName,age'
+     return this.http.get(`https://dummyjson.com/users?limit=${limit}&skip=${skip}`)
+
+    // return this.http.get(`${environment.apiUrl}/users`)
   }
 
 

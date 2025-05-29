@@ -13,8 +13,7 @@ export class UsersService {
   apiUrl = this.configService.get<string>('USERS_API');
 
   constructor(private httpService: HttpService,
-    private readonly configService: ConfigService
-  ) {
+    private readonly configService: ConfigService) {
 
   }
 

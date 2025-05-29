@@ -12,16 +12,6 @@ export class UsersController {
 
   @Get()
   findAll(): Promise<UsersResponseDto> {
-    // return new Promise((resolve, reject) => {
-    //   setTimeout(async () => {
-    //     try {
-    //       const response = await this.usersService.findAll();
-    //       resolve(response);
-    //     } catch (error) {
-    //       reject(error);
-    //     }
-    //   }, 4000); 
-    // });
       let response;
       response = this.usersService.findAll();
       return response;

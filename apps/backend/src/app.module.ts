@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from '@nestjs/axios';
 import { UsersModule } from './users/users.module';
+import { TodoesModule } from './todoes/todoes.module';
 @Module({
   imports: [
 
@@ -11,7 +12,8 @@ import { UsersModule } from './users/users.module';
       isGlobal: true,
     }),
     HttpModule,
-    UsersModule
+    UsersModule,
+    TodoesModule
 
   ],
   controllers: [AppController],

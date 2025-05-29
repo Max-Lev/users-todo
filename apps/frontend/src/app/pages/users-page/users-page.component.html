@@ -6,7 +6,7 @@
 } -->
 <section class="container">
     @if (loaded()) {
-    <app-users-table [usersResponse]="usersResponse()"></app-users-table>
+    <app-users-table [totalItems]="totalItems" (pageEvent)="pageEventHandler($event)" [usersResponse]="usersResponse()"></app-users-table>
     }@else {
     loading component table...
     }
