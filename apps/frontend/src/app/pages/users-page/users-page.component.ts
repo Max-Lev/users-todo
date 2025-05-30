@@ -1,10 +1,10 @@
-import { Component, computed, effect, inject, Signal } from '@angular/core';
+import { Component, computed, effect, inject, signal, Signal, WritableSignal } from '@angular/core';
 import { UsersService } from '../../core/providers/users.service';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { JsonPipe } from '@angular/common';
 import { UsersTableComponent } from '../../shared/components/users-table/users-table.component';
 import { UsersResponseDto } from '../../shared/models/users-response.model';
 import { PageEvent } from '@angular/material/paginator';
+
 @Component({
   selector: 'app-users-page',
   standalone: true,
@@ -19,43 +19,30 @@ export class UsersPageComponent {
 
   usersService = inject(UsersService);
 
-  usersResponse: Signal<UsersResponseDto | undefined> = toSignal(this.usersService.getUsers$());
+  users: WritableSignal<UsersResponseDto | undefined> = this.usersService.users;
 
-  loaded = computed(() => {
-    const response = this.usersResponse();
-    return response?.users && response.users.length > 0;
-  });
-
-  totalItems = 0;
-  pageSize = 5;
-  currentPage = 0;
-  itemsLenght = 0;
+  totalItems = signal(0);
+  pageSize = signal(5);
+  currentPage = signal(0);
+  skip = computed(() => this.currentPage() * this.pageSize());
 
   constructor() {
+    this.usersService.nextPageUsers(this.pageSize(), this.currentPage());
+
     effect(() => {
-      console.log(this.usersResponse()?.users);
-      // this.loaded = this.usersResponse()?.users.length ? true : false;
-    })
+      this.totalItems.set(this.users()?.total ?? 0);
+      console.log('users ',this.users());
+    });
+
+
   }
 
-  pageEventHandler(event:PageEvent){
-    console.log(event);
-    this.currentPage = event.pageIndex;
-    this.pageSize = event.pageSize;
-    
-    // this.itemsLenght = event.length;
-    const skip = this.currentPage * this.pageSize;
-    this.usersService.nextPageUsers(this.pageSize, skip )
-    .subscribe(
-      {
-        next: (res:any) =>{
-          console.log(res)
-          this.totalItems = res.total;
-        },
-        error(err) {
-          console.log(err)
-        },
-      });
+  onPageChanged(event: PageEvent) {
+    this.pageSize.set(event.pageSize);
+    this.currentPage.set(event.pageIndex);
+    this.usersService.nextPageUsers(this.pageSize(), this.currentPage());
   }
+
+
 
 }

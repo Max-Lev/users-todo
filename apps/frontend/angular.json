@@ -36,6 +36,13 @@
       "sourceRoot": "src",
       "prefix": "app",
       "architect": {
+        "serve-ssr": {
+          "options": {
+            "liveReload": true, 
+            "watch": true,
+            "poll": 1000 
+          }
+        },
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {

@@ -5,9 +5,8 @@
     </ul>
 } -->
 <section class="container">
-    @if (loaded()) {
-    <app-users-table [totalItems]="totalItems" (pageEvent)="pageEventHandler($event)" [usersResponse]="usersResponse()"></app-users-table>
-    }@else {
-    loading component table...
-    }
+
+    <app-users-table [totalItems]="totalItems()" [pageSize]="pageSize()" (pageEvent)="onPageChanged($event)"
+        [users]="users()?.users!"></app-users-table>
+
 </section>

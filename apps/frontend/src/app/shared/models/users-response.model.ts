@@ -1,5 +1,8 @@
 export interface UsersResponseDto {
     users: User[];
+    limit: number;
+    skip: number;
+    total: number;
 }
 
 export interface User {
@@ -57,7 +60,7 @@ export interface User {
 
     role: string;
 
-    name?:string;
+    name?: string;
 }
 
 export interface Company {
