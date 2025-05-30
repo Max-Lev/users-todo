@@ -9,7 +9,6 @@ import { PageEvent } from '@angular/material/paginator';
   selector: 'app-users-page',
   standalone: true,
   imports: [
-    JsonPipe,
     UsersTableComponent
   ],
   templateUrl: './users-page.component.html',
@@ -20,17 +19,16 @@ export class UsersPageComponent {
   usersService = inject(UsersService);
 
   users: WritableSignal<UsersResponseDto | undefined> = this.usersService.users;
-
-  totalItems = signal(0);
+  
   pageSize = signal(5);
   currentPage = signal(0);
-  skip = computed(() => this.currentPage() * this.pageSize());
+  totalItems = computed(() => this.users()?.total ?? 0);
+  
 
   constructor() {
     this.usersService.nextPageUsers(this.pageSize(), this.currentPage());
 
     effect(() => {
-      this.totalItems.set(this.users()?.total ?? 0);
       console.log('users ',this.users());
     });
 

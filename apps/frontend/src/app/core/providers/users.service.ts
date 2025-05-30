@@ -26,6 +26,12 @@ export class UsersService {
     //     console.error('Error loading users:', err);
     //   }
     // });
+    // effect(() => {
+    //   toSignal(this.getUsers$(), { initialValue: undefined })()
+    //   // .then(data => {
+    //   //   if (data) this.users.set(data);
+    //   // });
+    // });
 
     this.getUserTasks$(3);
   }
@@ -33,9 +39,9 @@ export class UsersService {
   getUserTasks$(id: number) {
     return this.http.get(`${environment.apiUrl}/todoes/${id}`)
       .pipe(
-        switchMap((res: any) => {
-          return of(res)
-        }),
+        // map((res: any) => {
+        //   return of(res)
+        // }),
         map((res: any) => {
           // console.log(res)
           return res;
@@ -72,26 +78,43 @@ export class UsersService {
       );
   }
 
-  nextPageUsers(pagesize: number, currentPage: number) {
+  // Store results per pageKey "limit|skip"
+  private pageCache = signal<Record<string, UsersResponseDto>>({});
+
+  nextPageUsers(pagesize: number, currentPage: number): Signal<UsersResponseDto | undefined> {
     const skip = currentPage * pagesize;
-    this.http.get(`https://dummyjson.com/users?limit=${pagesize}&skip=${skip}`)
-      .subscribe((res: any) => {
+    const pageKey = `${pagesize}|${skip}`;
+    const cache = this.pageCache();
+
+    // If exists, return as signal
+    if (cache[pageKey]) {
+      this.users.set(cache[pageKey]);
+      return signal(cache[pageKey]);
+    }
+
+    this.http.get<UsersResponseDto>(`https://dummyjson.com/users?limit=${pagesize}&skip=${skip}`)
+      .subscribe((res: UsersResponseDto) => {
         res = this.nameFormat(res);
         this.users.set(res);
+        this.pageCache.update(prev => ({ ...prev, [pageKey]: res }));
+
       });
+
+    // Return undefined initially
+    return signal(undefined);
+
   }
 
   private nameFormat(res: UsersResponseDto): UsersResponseDto {
     res.users = res.users.map((user) => {
-      const genter = user.gender === 'male' ? ' - M' : ' - F';
-      const maidenNameEmpty = user.firstName + ' ' + user.lastName + ' ' + genter;
-      const maidenNameExist = user.maidenName ? (user.firstName + ' ' +
-        ' ( ' + user.maidenName + ' ) ' + ' ' + user.lastName + ' ' + genter) : maidenNameEmpty;
-      const name = user.maidenName ? maidenNameExist : maidenNameEmpty;
+      const genderLabel = user.gender === 'male' ? ' - M' : ' - F';
+      const baseName = `${user.firstName} ${user.lastName}`;
+      const fullName = user.maidenName ? `${user.firstName} ( ${user.maidenName} ) ${user.lastName}` : baseName;
+
       return {
         ...user,
-        name
-      }
+        name: `${fullName} ${genderLabel}`
+      };
     });
     return res;
   }
