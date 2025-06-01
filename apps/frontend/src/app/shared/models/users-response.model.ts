@@ -1,8 +1,19 @@
-export interface UsersResponseDto {
-    users: User[];
+import { Todo } from "./todos-response.model";
+
+export interface ApiResponse<T> {
     limit: number;
     skip: number;
     total: number;
+    data: T[];
+}
+
+
+
+export interface UsersResponseDto{
+    limit: number;
+    skip: number;
+    total: number;
+    users: User[];
 }
 
 export interface User {

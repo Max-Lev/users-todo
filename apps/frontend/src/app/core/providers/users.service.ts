@@ -4,6 +4,7 @@ import { environment } from '../../../environments/environment';
 import { debounceTime, delay, EMPTY, map, Observable, of, switchMap, throttleTime } from 'rxjs';
 import { UsersResponseDto } from '../../shared/models/users-response.model';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { TodosApiResponse } from '../../shared/models/todos-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,45 +16,17 @@ export class UsersService {
   users = signal<UsersResponseDto | undefined>({ users: [], total: 0, limit: 0, skip: 0 });
 
   constructor() {
-    // Fix: Subscribe to the observable directly and update the signal
-    // this.getUsers$().subscribe({
-    //   next: (userData) => {
-    //     if (userData) {
-    //       this.users.set(userData);
-    //     }
-    //   },
-    //   error: (err) => {
-    //     console.error('Error loading users:', err);
-    //   }
-    // });
-    // effect(() => {
-    //   toSignal(this.getUsers$(), { initialValue: undefined })()
-    //   // .then(data => {
-    //   //   if (data) this.users.set(data);
-    //   // });
-    // });
 
-    this.getUserTasks$(3);
   }
 
   getUserTasks$(id: number) {
-    return this.http.get(`${environment.apiUrl}/todoes/${id}`)
+    return this.http.get<TodosApiResponse>(`${environment.apiUrl}/todoes/${id}`)
       .pipe(
-        // map((res: any) => {
-        //   return of(res)
-        // }),
-        map((res: any) => {
-          // console.log(res)
+        map((res: TodosApiResponse) => {
+          console.log('getUserTasks ', res)
           return res;
         })
-      ).subscribe({
-        next: (res) => {
-          // console.log(res)
-        },
-        error: (err) => {
-          // console.log(err)
-        }
-      })
+      );
   }
 
   getUsers$(): Observable<UsersResponseDto | undefined> {
@@ -82,6 +55,7 @@ export class UsersService {
   private pageCache = signal<Record<string, UsersResponseDto>>({});
 
   nextPageUsers(pagesize: number, currentPage: number): Signal<UsersResponseDto | undefined> {
+
     const skip = currentPage * pagesize;
     const pageKey = `${pagesize}|${skip}`;
     const cache = this.pageCache();

@@ -1,11 +1,12 @@
-import { AfterViewInit, Component, EventEmitter, Input,OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, inject, Input,OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DatePipe, TitleCasePipe } from '@angular/common';
-import { UsersResponseDto } from '../../models/users-response.model';
+import { User, UsersResponseDto } from '../../models/users-response.model';
+
 
 @Component({
   selector: 'app-users-table',
@@ -22,7 +23,6 @@ export class UsersTableComponent implements OnChanges,AfterViewInit {
 
 
   @Input() set users(value: UsersResponseDto) {
-    debugger
     this.dataSource.data = value?.users || [];
   }
 
@@ -30,12 +30,15 @@ export class UsersTableComponent implements OnChanges,AfterViewInit {
   @Input() pageSize: number = 5;
 
   @Output() pageEvent = new EventEmitter<PageEvent>();
+  @Output() selectedRow = new EventEmitter<User>();
 
   dataSource = new MatTableDataSource<any>([]);
   displayedColumns: string[] = ['id', 'name', 'ssn', 'ein', 'phone', 'birthDate', 'role'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+
+  
 
   ngOnChanges(changes: SimpleChanges): void {
     // console.log(this)

@@ -1,7 +1,6 @@
-
 <section class="container">
 
     <app-users-table [totalItems]="totalItems()" [pageSize]="pageSize()" (pageEvent)="onPageChanged($event)"
-        [users]="users()!"></app-users-table>
+        (selectedRow)="selectedRowHandler($event)" [users]="users()!"></app-users-table>
 
 </section>
