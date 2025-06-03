@@ -2,5 +2,9 @@
 
     <app-users-table [totalItems]="totalItems()" [pageSize]="pageSize()" (pageEvent)="onPageChanged($event)"
         (selectedRow)="selectedRowHandler($event)" [users]="users()!"></app-users-table>
+    
+    <app-todos-table [todos]="todos()"></app-todos-table>
+    
 
 </section>
+<!-- <router-outlet></router-outlet> -->

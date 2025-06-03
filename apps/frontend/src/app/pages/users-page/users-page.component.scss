@@ -1,0 +1,14 @@
+app-todos-table {
+    margin-top: 100px;
+    margin-left: 0.5rem;
+    margin-right: -1rem;
+    display: flex;
+    flex: 1;
+    align-items: flex-start;
+}
+
+app-users-table {
+    display: flex;
+    flex: 2;
+    flex-direction: column;
+}

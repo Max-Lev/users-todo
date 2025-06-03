@@ -6,13 +6,17 @@ import { User, UsersResponseDto } from '../../shared/models/users-response.model
 import { PageEvent } from '@angular/material/paginator';
 import { UsersTableState, UsersTasksStore } from '../../core/store/users.store';
 import { patchState, signalStore } from '@ngrx/signals';
+import { TodosTableComponent } from '../../shared/components/todos-table/todos-table.component';
+import { Router, RouterModule, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-users-page',
   standalone: true,
   imports: [
     UsersTableComponent,
-
+    TodosTableComponent,
+    RouterModule,
+    RouterOutlet
   ],
   templateUrl: './users-page.component.html',
   styleUrl: './users-page.component.scss'
@@ -21,6 +25,7 @@ export class UsersPageComponent {
 
   usersService = inject(UsersService);
   usersTasksStore = inject(UsersTasksStore);
+  router = inject(Router);
 
   users: WritableSignal<UsersResponseDto | undefined> = this.usersService.users;
 
@@ -30,36 +35,39 @@ export class UsersPageComponent {
   currentPage = computed(() => this.usersTableState.activePage());
   totalItems = computed(() => this.users()?.total ?? 0);
 
-
+  todos = computed(()=>this.usersTasksStore.todos());
 
 
   constructor() {
     this.usersService.nextPageUsers(this.pageSize(), this.currentPage());
 
     effect(() => {
-      console.log('users: ', this.users());
-      console.log('usersTasksStore: ', this.usersTasksStore.selectedUser())
+      // console.log('users: ', this.users());
+      // console.log('usersTasksStore: ', this.usersTasksStore.selectedUser())
       console.log('usersTasksStore userTasks: ', this.usersTasksStore.todos())
       console.log('usersTableState: ', this.usersTableState())
-
+      console.log(this.todos());
     });
 
 
   }
 
   onPageChanged(event: PageEvent) {
-    // this.usersTableStore.pageChange({pageIndex:event.pageIndex,pageSize:event.pageSize});
     patchState(UsersTableState, { activePage: event.pageIndex, pageSize: event.pageSize });
-    console.log(this.pageSize())
     this.usersService.nextPageUsers(this.pageSize(), this.currentPage());
-
   }
 
-  selectedRowHandler(user: User) {
-    console.log(user);
-    this.usersTasksStore.setSelectedUser(user);
+  selectedRowHandler(event:{user: User,action:string}) {
+    console.log(event.user,event.action);
+    this.usersTasksStore.setSelectedUser(event.user);
+    if(event.action==='edit'){
+      this.router.navigate([`users/${event.user.id}`])
+    }
   }
 
+  editAction(){
+
+  }
 
 
 }

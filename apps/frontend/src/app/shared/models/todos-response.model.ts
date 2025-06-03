@@ -7,4 +7,10 @@ export interface Todo {
     userId: number;
 }
 
-export type TodosApiResponse = ApiResponse<Todo[]>;
+// export type TodosApiResponse = ApiResponse<Todo[]>;
+export type TodosApiResponse = {
+    todos: Todo[];
+    limit: number;
+    skip: number;
+    total: number;
+}

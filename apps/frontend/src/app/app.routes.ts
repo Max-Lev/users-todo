@@ -6,12 +6,19 @@ export const routes: Routes = [
     },
     {
         path: 'users', 
-        loadComponent: () => import('../app/pages/users-page/users-page.component').then(c => c.UsersPageComponent)
+        loadComponent: () => import('../app/pages/users-page/users-page.component').then(c => c.UsersPageComponent),
+        // children:[
+        //     {
+        //         path: ':id', 
+        //         loadComponent: () => import('../app/pages/todos/todos.component').then(c => c.TodosComponent)
+        //     },
+        // ]
     },
     {
-        path: 'todos', 
+        path: 'users/:id', 
         loadComponent: () => import('../app/pages/todos/todos.component').then(c => c.TodosComponent)
     },
+    
     {
         path: '**', redirectTo: '', pathMatch: 'full'
     }

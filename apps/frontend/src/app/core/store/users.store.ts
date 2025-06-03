@@ -27,7 +27,8 @@ export type UserTasksState = {
 
 const initialState: UserTasksState = {
     selectedUser: null,
-    todos: { limit: 0, skip: 0, total: 0, data: [] },
+    // todos: { limit: 0, skip: 0, total: 0, data: [] },
+    todos: { limit: 0, skip: 0, total: 0, todos: [] as any },
     loading: false,
     error: null,
     todosCache: {}
@@ -51,11 +52,9 @@ export const UsersTasksStore = signalStore(
                                 loading: false,
                                 error: null,
                                 // Cache the todos for this user
-                                todosCache: {
-                                    ...store.todosCache(),
-                                    [userId]: todos
-                                }
+                                todosCache: { ...store.todosCache(), [userId]: todos }
                             });
+                            console.log('User tasks loaded:', store.todos());
                         }),
                         catchError((err) => {
                             console.error('Failed to load user tasks', err);
@@ -72,7 +71,6 @@ export const UsersTasksStore = signalStore(
 
         return {
             loadUserTasks,
-
             // Method to set selected user and automatically load their tasks
             setSelectedUser(user: User) {
                 patchState(store, { selectedUser: user });
@@ -128,6 +126,26 @@ export const UsersTasksStore = signalStore(
         onInit(store) {
             // Optionally load data for a default user
             // You might want to get this from route params or user preferences
+            const usersService = inject(UsersService);
+            usersService.getUserTasks$(1).subscribe({
+                next: (todos: TodosApiResponse) => {
+                    patchState(store, {
+                        todos,
+                        loading: false,
+                        error: null,
+                        // Cache the todos for this user
+                        todosCache: { ...store.todosCache(), [1]: todos }
+                    });
+                },
+                error: (err: any) => {
+                    console.error('Failed to load default user tasks', err);
+                    patchState(store, {
+                        loading: false,
+                        error: 'Failed to load default user tasks'
+                    });
+                }
+            })
+
             console.log('UsersTasksStore initialized');
         }
     })

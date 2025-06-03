@@ -22,6 +22,7 @@ export class UsersService {
   getUserTasks$(id: number) {
     return this.http.get<TodosApiResponse>(`${environment.apiUrl}/todoes/${id}`)
       .pipe(
+        // delay(3000),
         map((res: TodosApiResponse) => {
           console.log('getUserTasks ', res)
           return res;

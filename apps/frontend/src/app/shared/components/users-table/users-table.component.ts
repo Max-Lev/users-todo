@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, inject, Input,OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { DatePipe, TitleCasePipe } from '@angular/common';
 import { User, UsersResponseDto } from '../../models/users-response.model';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @Component({
@@ -14,13 +15,13 @@ import { User, UsersResponseDto } from '../../models/users-response.model';
     MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule,
     MatPaginatorModule,
     DatePipe,
-    TitleCasePipe
+    TitleCasePipe,
+    MatButtonModule
   ],
   templateUrl: './users-table.component.html',
   styleUrl: './users-table.component.scss'
 })
-export class UsersTableComponent implements OnChanges,AfterViewInit {
-
+export class UsersTableComponent implements OnChanges, AfterViewInit {
 
   @Input() set users(value: UsersResponseDto) {
     this.dataSource.data = value?.users || [];
@@ -30,15 +31,15 @@ export class UsersTableComponent implements OnChanges,AfterViewInit {
   @Input() pageSize: number = 5;
 
   @Output() pageEvent = new EventEmitter<PageEvent>();
-  @Output() selectedRow = new EventEmitter<User>();
+  @Output() selectedRow = new EventEmitter<{ user: User, action: string }>();
 
   dataSource = new MatTableDataSource<any>([]);
-  displayedColumns: string[] = ['id', 'name', 'ssn', 'ein', 'phone', 'birthDate', 'role'];
+  displayedColumns: string[] = ['id', 'name', 'ssn', 'ein', 'phone', 'birthDate', 'role', 'edit'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  
+
 
   ngOnChanges(changes: SimpleChanges): void {
     // console.log(this)
@@ -51,6 +52,22 @@ export class UsersTableComponent implements OnChanges,AfterViewInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  // selectedRowHandler(event:{user:User,action:string}){
+  //   this.selectedRow.emit(event);
+  // }
+
+   // This method emits the event when a row is clicked
+   onRowClick(event:Event,user: User) {
+    event.stopPropagation(); // Prevent row click from firing
+    this.selectedRow.emit({ user, action: 'select' });
+  }
+
+  // Method for edit button clicks
+  onEditClick(event: Event, user: User) {
+    event.stopPropagation(); // Prevent row click from firing
+    this.selectedRow.emit({ user, action: 'edit' });
   }
 
 
