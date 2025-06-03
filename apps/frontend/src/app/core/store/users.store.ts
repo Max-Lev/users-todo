@@ -4,7 +4,8 @@ import { patchState, signalState, signalStore, withHooks, withMethods, withState
 import { UsersService } from "../providers/users.service";
 import { TodosApiResponse, Todo } from "../../shared/models/todos-response.model";
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
-import { pipe, switchMap, tap, catchError, of } from 'rxjs';
+import { pipe, switchMap, tap, catchError, of, delay } from 'rxjs';
+import { TodosService } from "../providers/todos.service";
 
 export type UsersTableState = {
     pageSize: number;
@@ -39,13 +40,16 @@ export const UsersTasksStore = signalStore(
     withState<UserTasksState>(initialState),
     withMethods((store) => {
         const usersService = inject(UsersService);
+        const todosService = inject(TodosService);
 
         // Using rxMethod for better reactive handling
         const loadUserTasks = rxMethod<number>(
             pipe(
-                tap(() => patchState(store, { loading: true, error: null })),
+                tap(() => patchState(store, {
+                    loading: true, error: null
+                })),
                 switchMap((userId) =>
-                    usersService.getUserTasks$(userId).pipe(
+                    todosService.getUserTasks$(userId).pipe(delay(1000)).pipe(
                         tap((todos: TodosApiResponse) => {
                             patchState(store, {
                                 todos,
@@ -127,7 +131,8 @@ export const UsersTasksStore = signalStore(
             // Optionally load data for a default user
             // You might want to get this from route params or user preferences
             const usersService = inject(UsersService);
-            usersService.getUserTasks$(1).subscribe({
+            const todosService = inject(TodosService);
+            todosService.getUserTasks$(1).subscribe({
                 next: (todos: TodosApiResponse) => {
                     patchState(store, {
                         todos,

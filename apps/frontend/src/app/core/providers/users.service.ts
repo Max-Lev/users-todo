@@ -2,7 +2,7 @@ import { HttpClient, httpResource } from '@angular/common/http';
 import { effect, inject, Injectable, Signal, signal } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { debounceTime, delay, EMPTY, map, Observable, of, switchMap, throttleTime } from 'rxjs';
-import { UsersResponseDto } from '../../shared/models/users-response.model';
+import { User, UsersResponseDto } from '../../shared/models/users-response.model';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TodosApiResponse } from '../../shared/models/todos-response.model';
 
@@ -19,12 +19,24 @@ export class UsersService {
 
   }
 
-  getUserTasks$(id: number) {
-    return this.http.get<TodosApiResponse>(`${environment.apiUrl}/todoes/${id}`)
+  // getUserTasks$(id: number) {
+  //   return this.http.get<TodosApiResponse>(`${environment.apiUrl}/todoes/${id}`)
+  //     .pipe(
+  //       // delay(3000),
+  //       map((res: TodosApiResponse) => {
+  //         console.log('getUserTasks ', res)
+  //         return res;
+  //       })
+  //     );
+  // }
+
+  getUserById$(id: number): Observable<User | undefined> {
+    // return this.http.get<UsersResponseDto>(`${environment.apiUrl}/users/${id}`)
+    return this.http.get<User>(`https://dummyjson.com/users/${id}`)
       .pipe(
         // delay(3000),
-        map((res: TodosApiResponse) => {
-          console.log('getUserTasks ', res)
+        map((res: User) => {
+          console.log('getUserById ', res)
           return res;
         })
       );

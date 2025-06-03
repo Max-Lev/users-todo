@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal, Signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, signal, Signal, WritableSignal } from '@angular/core';
 import { UsersService } from '../../core/providers/users.service';
 import { JsonPipe } from '@angular/common';
 import { UsersTableComponent } from '../../shared/components/users-table/users-table.component';
@@ -16,10 +16,10 @@ import { Router, RouterModule, RouterOutlet } from '@angular/router';
     UsersTableComponent,
     TodosTableComponent,
     RouterModule,
-    RouterOutlet
   ],
   templateUrl: './users-page.component.html',
-  styleUrl: './users-page.component.scss'
+  styleUrl: './users-page.component.scss',
+  changeDetection:ChangeDetectionStrategy.OnPush
 })
 export class UsersPageComponent {
 
@@ -36,17 +36,19 @@ export class UsersPageComponent {
   totalItems = computed(() => this.users()?.total ?? 0);
 
   todos = computed(()=>this.usersTasksStore.todos());
+  isLoading = computed(()=>this.usersTasksStore.loading());
 
 
   constructor() {
     this.usersService.nextPageUsers(this.pageSize(), this.currentPage());
 
     effect(() => {
-      // console.log('users: ', this.users());
+      console.log('users: ', this.users());
       // console.log('usersTasksStore: ', this.usersTasksStore.selectedUser())
       console.log('usersTasksStore userTasks: ', this.usersTasksStore.todos())
-      console.log('usersTableState: ', this.usersTableState())
-      console.log(this.todos());
+      // console.log('usersTableState: ', this.usersTableState())
+      // console.log(this.todos());
+      console.log(this.usersTasksStore.loading());
     });
 
 
@@ -61,7 +63,7 @@ export class UsersPageComponent {
     console.log(event.user,event.action);
     this.usersTasksStore.setSelectedUser(event.user);
     if(event.action==='edit'){
-      this.router.navigate([`users/${event.user.id}`])
+      this.router.navigate([`users/${event.user.id}`]);
     }
   }
 

@@ -1,24 +1,20 @@
 import { Routes } from '@angular/router';
+import { RenderMode } from '@angular/ssr';
 
 export const routes: Routes = [
     {
         path: '', redirectTo: 'users', pathMatch: 'full'
     },
     {
-        path: 'users', 
+        path: 'users',
         loadComponent: () => import('../app/pages/users-page/users-page.component').then(c => c.UsersPageComponent),
-        // children:[
-        //     {
-        //         path: ':id', 
-        //         loadComponent: () => import('../app/pages/todos/todos.component').then(c => c.TodosComponent)
-        //     },
-        // ]
     },
     {
-        path: 'users/:id', 
-        loadComponent: () => import('../app/pages/todos/todos.component').then(c => c.TodosComponent)
+        path: 'users/:id',
+        loadComponent: () =>
+            import('../app/pages/edit-user-page/edit-user-page.component').then(c => c.EditUserPageComponent),
     },
-    
+
     {
         path: '**', redirectTo: '', pathMatch: 'full'
     }

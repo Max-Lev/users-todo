@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-todos',
@@ -7,5 +8,14 @@ import { Component } from '@angular/core';
   styleUrl: './todos.component.scss'
 })
 export class TodosComponent {
+  router = inject(Router);
+  activeRoute = inject(ActivatedRoute);
+
+  constructor(){
+    effect(()=>{
+      console.log(this.router)
+      console.log(this.activeRoute)
+    })
+  }
 
 }

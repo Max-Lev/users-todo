@@ -5,7 +5,7 @@ import { UsersTasksStore } from './core/store/users.store';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,RouterLink],
+  imports: [RouterOutlet],
   // providers:[UsersTasksStore],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
