@@ -8,6 +8,7 @@ import { UsersTableState, UsersTasksStore } from '../../core/store/users.store';
 import { patchState, signalStore } from '@ngrx/signals';
 import { TodosTableComponent } from '../../shared/components/todos-table/todos-table.component';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
+import { ExpansionPanelState } from '../../core/store/edit-users.store';
 
 @Component({
   selector: 'app-users-page',
@@ -37,18 +38,17 @@ export class UsersPageComponent {
 
   todos = computed(()=>this.usersTasksStore.todos());
   isLoading = computed(()=>this.usersTasksStore.loading());
+  expansionPanelState = ExpansionPanelState;
 
 
   constructor() {
     this.usersService.nextPageUsers(this.pageSize(), this.currentPage());
 
     effect(() => {
-      console.log('users: ', this.users());
+      // console.log('users: ', this.users());
       // console.log('usersTasksStore: ', this.usersTasksStore.selectedUser())
-      console.log('usersTasksStore userTasks: ', this.usersTasksStore.todos())
-      // console.log('usersTableState: ', this.usersTableState())
-      // console.log(this.todos());
-      console.log(this.usersTasksStore.loading());
+      // console.log('usersTasksStore userTasks: ', this.usersTasksStore.todos())
+      console.log(this.expansionPanelState())
     });
 
 

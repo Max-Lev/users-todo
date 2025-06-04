@@ -19,17 +19,6 @@ export class UsersService {
 
   }
 
-  // getUserTasks$(id: number) {
-  //   return this.http.get<TodosApiResponse>(`${environment.apiUrl}/todoes/${id}`)
-  //     .pipe(
-  //       // delay(3000),
-  //       map((res: TodosApiResponse) => {
-  //         console.log('getUserTasks ', res)
-  //         return res;
-  //       })
-  //     );
-  // }
-
   getUserById$(id: number): Observable<User | undefined> {
     // return this.http.get<UsersResponseDto>(`${environment.apiUrl}/users/${id}`)
     return this.http.get<User>(`https://dummyjson.com/users/${id}`)
@@ -46,7 +35,7 @@ export class UsersService {
     return this.http.get<UsersResponseDto>(`${environment.apiUrl}/users`)
       .pipe(
         map((res: UsersResponseDto) => {
-          console.log(res);
+          // console.log(res);
           if (res === null) {
             console.warn('Users property is not an array, initializing empty array');
             return res;

@@ -34,8 +34,8 @@ export class UsersTableComponent implements OnChanges, AfterViewInit {
   @Output() selectedRow = new EventEmitter<{ user: User, action: string }>();
 
   dataSource = new MatTableDataSource<any>([]);
-  // displayedColumns: string[] = ['id', 'name', 'ssn', 'ein', 'phone', 'birthDate', 'role', 'edit'];
-  displayedColumns: string[] = ['ein', 'name', 'ssn', 'phone', 'birthDate', 'role', 'edit'];
+  displayedColumns: string[] = ['id', 'name', 'ssn', 'ein', 'phone', 'birthDate', 'role', 'edit'];
+  // displayedColumns: string[] = ['ein', 'name', 'ssn', 'phone', 'birthDate', 'role', 'edit'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;

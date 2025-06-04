@@ -5,6 +5,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideClientHydration } from '@angular/platform-browser';
 
 import { routes } from './app.routes';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,7 +15,7 @@ export const appConfig: ApplicationConfig = {
     ),
     provideHttpClient(withInterceptorsFromDi()),
     provideClientHydration(),
-
+    provideNativeDateAdapter()
   ]
 };
 
