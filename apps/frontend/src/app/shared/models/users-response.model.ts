@@ -72,6 +72,8 @@ export interface User {
     role: string;
 
     name?: string;
+
+    img?:string;
 }
 
 export interface Company {

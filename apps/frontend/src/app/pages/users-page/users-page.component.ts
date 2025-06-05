@@ -33,7 +33,7 @@ export class UsersPageComponent {
   usersTableState = UsersTableState;
 
   pageSize = computed(() => this.usersTableState.pageSize());
-  currentPage = computed(() => this.usersTableState.activePage());
+  activePage = computed(() => this.usersTableState.activePage());
   totalItems = computed(() => this.users()?.total ?? 0);
 
   todos = computed(()=>this.usersTasksStore.todos());
@@ -42,13 +42,10 @@ export class UsersPageComponent {
 
 
   constructor() {
-    this.usersService.nextPageUsers(this.pageSize(), this.currentPage());
+    this.usersService.nextPageUsers(this.pageSize(), this.activePage());
 
     effect(() => {
-      // console.log('users: ', this.users());
-      // console.log('usersTasksStore: ', this.usersTasksStore.selectedUser())
-      // console.log('usersTasksStore userTasks: ', this.usersTasksStore.todos())
-      console.log(this.expansionPanelState())
+      console.log('expansionPanelState ',this.expansionPanelState())
     });
 
 
@@ -56,7 +53,7 @@ export class UsersPageComponent {
 
   onPageChanged(event: PageEvent) {
     patchState(UsersTableState, { activePage: event.pageIndex, pageSize: event.pageSize });
-    this.usersService.nextPageUsers(this.pageSize(), this.currentPage());
+    this.usersService.nextPageUsers(this.pageSize(), this.activePage());
   }
 
   selectedRowHandler(event:{user: User,action:string}) {
@@ -65,10 +62,6 @@ export class UsersPageComponent {
     if(event.action==='edit'){
       this.router.navigate([`users/${event.user.id}`]);
     }
-  }
-
-  editAction(){
-
   }
 
 

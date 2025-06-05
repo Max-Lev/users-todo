@@ -25,33 +25,33 @@ export class UsersService {
       .pipe(
         // delay(3000),
         map((res: User) => {
-          console.log('getUserById ', res)
+          // console.log('getUserById ', res)
           return res;
         })
       );
   }
 
-  getUsers$(): Observable<UsersResponseDto | undefined> {
-    return this.http.get<UsersResponseDto>(`${environment.apiUrl}/users`)
-      .pipe(
-        map((res: UsersResponseDto) => {
-          // console.log(res);
-          if (res === null) {
-            console.warn('Users property is not an array, initializing empty array');
-            return res;
-          }
-          if (!Array.isArray(res.users)) {
-            console.warn('Users property is not an array, initializing empty array');
-            res.users = [];
-          }
+  // getUsers$(): Observable<UsersResponseDto | undefined> {
+  //   return this.http.get<UsersResponseDto>(`${environment.apiUrl}/users`)
+  //     .pipe(
+  //       map((res: UsersResponseDto) => {
+  //         // console.log(res);
+  //         if (res === null) {
+  //           console.warn('Users property is not an array, initializing empty array');
+  //           return res;
+  //         }
+  //         if (!Array.isArray(res.users)) {
+  //           console.warn('Users property is not an array, initializing empty array');
+  //           res.users = [];
+  //         }
 
-          res = this.nameFormat(res);
+  //         res = this.nameFormat(res);
 
-          return res;
-        }),
-        // delay(4000) 
-      );
-  }
+  //         return res;
+  //       }),
+  //       // delay(4000) 
+  //     );
+  // }
 
   // Store results per pageKey "limit|skip"
   private pageCache = signal<Record<string, UsersResponseDto>>({});
@@ -70,7 +70,7 @@ export class UsersService {
 
     this.http.get<UsersResponseDto>(`https://dummyjson.com/users?limit=${pagesize}&skip=${skip}`)
       .subscribe((res: UsersResponseDto) => {
-        res = this.nameFormat(res);
+        res = this.formate().nameFormat(res);
         this.users.set(res);
         this.pageCache.update(prev => ({ ...prev, [pageKey]: res }));
 
@@ -81,18 +81,39 @@ export class UsersService {
 
   }
 
-  private nameFormat(res: UsersResponseDto): UsersResponseDto {
-    res.users = res.users.map((user) => {
-      const genderLabel = user.gender === 'male' ? ' - M' : ' - F';
-      const baseName = `${user.firstName} ${user.lastName}`;
-      const fullName = user.maidenName ? `${user.firstName} ( ${user.maidenName} ) ${user.lastName}` : baseName;
+  formate() {
+    const generateID = (user: User) => {
+      if (user.id > 99) {
+        let id = Math.random() * 99;
+        id = Math.floor(id);
+        return id;
+      } else {
+        return user.id
+      }
+    };
+    const nameFormat = (res: UsersResponseDto): UsersResponseDto => {
+      res.users = res.users.map((user) => {
+        const genderLabel = user.gender === 'male' ? ' - M' : ' - F';
+        const baseName = `${user.firstName} ${user.lastName}`;
+        const fullName = user.maidenName ? `${user.firstName} ( ${user.maidenName} ) ${user.lastName}` : baseName;
+        // https://randomuser.me/api/portraits/women/99.jpg
+        // const img = `https://picsum.photos/id/${user.id}/200/300`
+        const _gender = user.gender === 'male' ? 'men' : 'women';
+        const img = `https://randomuser.me/api/portraits/${_gender}/${generateID(user)}.jpg`;
+        return {
+          ...user,
+          name: `${fullName} ${genderLabel}`,
+          img
+        };
+      });
+      return res;
+    };
 
-      return {
-        ...user,
-        name: `${fullName} ${genderLabel}`
-      };
-    });
-    return res;
+    return { 
+      generateID, 
+      nameFormat 
+    }
+
   }
 
 

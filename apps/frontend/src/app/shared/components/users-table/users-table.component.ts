@@ -29,21 +29,21 @@ export class UsersTableComponent implements OnChanges, AfterViewInit {
 
   @Input() totalItems: number = 0;
   @Input() pageSize: number = 5;
+  @Input() activePage: number = 0;
 
   @Output() pageEvent = new EventEmitter<PageEvent>();
   @Output() selectedRow = new EventEmitter<{ user: User, action: string }>();
 
   dataSource = new MatTableDataSource<any>([]);
   displayedColumns: string[] = ['id', 'name', 'ssn', 'ein', 'phone', 'birthDate', 'role', 'edit'];
-  // displayedColumns: string[] = ['ein', 'name', 'ssn', 'phone', 'birthDate', 'role', 'edit'];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('paginator') paginator: MatPaginator = new MatPaginator();
   @ViewChild(MatSort) sort!: MatSort;
 
 
 
   ngOnChanges(changes: SimpleChanges): void {
-    // console.log(this)
+    this.paginator.pageIndex = this.activePage;
   }
 
   ngAfterViewInit() {
@@ -59,8 +59,8 @@ export class UsersTableComponent implements OnChanges, AfterViewInit {
   //   this.selectedRow.emit(event);
   // }
 
-   // This method emits the event when a row is clicked
-   onRowClick(event:Event,user: User) {
+  // This method emits the event when a row is clicked
+  onRowClick(event: Event, user: User) {
     event.stopPropagation(); // Prevent row click from firing
     this.selectedRow.emit({ user, action: 'select' });
   }
@@ -70,6 +70,7 @@ export class UsersTableComponent implements OnChanges, AfterViewInit {
     event.stopPropagation(); // Prevent row click from firing
     this.selectedRow.emit({ user, action: 'edit' });
   }
+
 
 
 }

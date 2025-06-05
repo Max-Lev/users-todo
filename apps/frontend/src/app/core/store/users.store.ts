@@ -58,7 +58,7 @@ export const UsersTasksStore = signalStore(
                                 // Cache the todos for this user
                                 todosCache: { ...store.todosCache(), [userId]: todos }
                             });
-                            console.log('User tasks loaded:', store.todos());
+                            // console.log('User tasks loaded:', store.todos());
                         }),
                         catchError((err) => {
                             console.error('Failed to load user tasks', err);
@@ -78,7 +78,7 @@ export const UsersTasksStore = signalStore(
             // Method to set selected user and automatically load their tasks
             setSelectedUser(user: User) {
                 patchState(store, { selectedUser: user });
-                console.log('Selected user:', user);
+                // console.log('Selected user:', user);
 
                 // Check cache first
                 const cachedTodos = store.todosCache()[user.id];
@@ -94,7 +94,7 @@ export const UsersTasksStore = signalStore(
             refreshCurrentUserTasks() {
                 const currentUser = store.selectedUser();
                 if (currentUser?.id) {
-                    console.log('refreshCurrentUserTasks', currentUser.id);
+                    // console.log('refreshCurrentUserTasks', currentUser.id);
                     loadUserTasks(currentUser.id);
                 }
             },
@@ -151,7 +151,7 @@ export const UsersTasksStore = signalStore(
                 }
             })
 
-            console.log('UsersTasksStore initialized');
+            // console.log('UsersTasksStore initialized');
         }
     })
 );

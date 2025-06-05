@@ -25,7 +25,7 @@ export class TodosTableComponent implements OnChanges {
   
   constructor() {
     effect(() => {
-      console.log(this.todos());
+      // console.log(this.todos());
     })
   }
 

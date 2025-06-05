@@ -12,12 +12,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ExpansionPanelState } from '../../core/store/edit-users.store';
 import { patchState } from '@ngrx/signals';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-edit-user-page',
   imports: [
-    JsonPipe,
     MatButtonModule,
     MatExpansionModule,
     MatIconModule,
@@ -30,7 +29,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styleUrl: './edit-user-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditUserPageComponent implements AfterViewInit{
+export class EditUserPageComponent implements AfterViewInit {
   private usersTasksStore = inject(UsersTasksStore);
   private usersService = inject(UsersService);
   activatedRoute = inject(ActivatedRoute);
@@ -39,11 +38,13 @@ export class EditUserPageComponent implements AfterViewInit{
 
   destroy = inject(DestroyRef);
 
-  @Input() title: string = '';
   @Input() id: string = '';
+  
   selectedUser = computed(() => this.usersTasksStore.selectedUser() ?? null);
+  
   userId = computed(() => this.activatedRoute.snapshot.paramMap.get('id'));
-  user = signal<User | undefined>(undefined);
+  
+  user = toSignal(this.usersService.getUserById$(+this.userId()!));
 
   step = signal(0);
 
@@ -58,43 +59,35 @@ export class EditUserPageComponent implements AfterViewInit{
       // console.log('userId: ', this.userId())
       // console.log('Selected user:', this.selectedUser());
       console.log('expansionPanelState ', this.expansionPanelState())
-      
+
     });
 
     effect(() => {
-      const id = this.userId();
-      if (id) {
-        this.usersService.getUserById$(+id).pipe(takeUntilDestroyed(this.destroy)).subscribe((user: User | undefined) => {
-          console.log(user)
-          this.user.set(user);
-          if (user !== undefined && this.selectedUser()?.id !== +id) {
-            this.usersTasksStore.setSelectedUser(user);
-          }
-        });
+      if(this.user()){
+        this.usersTasksStore.setSelectedUser(this.user()!);
       }
     });
   }
   ngAfterViewInit(): void {
 
-    this.panels().forEach((exp, index) => {
-      console.log(exp)
-      exp.expandedChange.pipe(takeUntilDestroyed(this.destroy)).subscribe((expanded) => {
-        if (expanded) {
-          console.log('expended: ', expanded, exp.id);
-          patchState(ExpansionPanelState, { activePanel: index, activeUser: { id: this.userId(), ...this.user() } });
-        }
+
+    this.panels().forEach((panel, index) => {
+      panel.opened.subscribe(() => {
+        console.log(`Panel ${index} opened`);
+        this.setStep(index);
+      });
+
+      panel.closed.subscribe(() => {
+        console.log(`Panel ${index} closed`);
       });
     });
 
-    this.openPanel(this.expansionPanelState.activePanel());
+
 
   }
 
   handleButtonClick(sectionIndex: number, action: string) {
     console.log(sectionIndex, action);
-
-    patchState(ExpansionPanelState, {activePanel: sectionIndex, activeUser: {id: this.userId(), ...this.user()}});
-
     switch (action) {
       case 'next':
         this.nextStep();
@@ -127,13 +120,14 @@ export class EditUserPageComponent implements AfterViewInit{
     // Handle completion logic here
   }
 
-  openPanel(index: number) {
-    debugger
-    const panel = this.panels()[index];
-    if (panel) {
-      panel.expanded = true; // This will open the panel
-      patchState(ExpansionPanelState, {activePanel: index,activeUser: { id: this.userId(), ...this.user() }});
-    }
-  }
+  // openPanel(index: number) {
+
+  //   const panel = this.panels()[index];
+  //   if (panel) {
+  //     panel.expanded = true; // This will open the panel
+
+
+  //   }
+  // }
 
 }
